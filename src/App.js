@@ -76,6 +76,8 @@ function App() {
   const [searchText, setSearchText] = React.useState("");
   const [searchResult, setSearchResult] = React.useState(null); // {type:"polygon"/"point", ...}
 
+  const [showInfo, setShowInfo] = React.useState(false);
+
   const inputStyle = {
     width: "100%",
     marginBottom: "6px",
@@ -112,7 +114,7 @@ function App() {
     return null;
   }
 
-  // SEARCH using Nominatim [web:56][web:78]
+  // SEARCH using Nominatim, India focused
   async function handleSearch() {
     if (!searchText.trim()) return;
 
@@ -124,18 +126,16 @@ function App() {
         addressdetails: 1,
         polygon_geojson: 1,
         limit: 1,
-        countrycodes: "in"  // Focus on India
+        countrycodes: "in"
       };
-      
 
       const response = await axios.get(url, {
         params,
-        headers: { 
-          "Accept-Language": "en-IN",  // Indian English
-          "User-Agent": "GeoEstate-Demo" 
+        headers: {
+          "Accept-Language": "en-IN",
+          "User-Agent": "GeoEstate-Demo"
         }
       });
-      
 
       if (response.data && response.data.length > 0) {
         const place = response.data[0];
@@ -185,6 +185,7 @@ function App() {
       alert("Unable to search right now. Try again later.");
     }
   }
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       {/* Header with search bar */}
@@ -229,7 +230,7 @@ function App() {
               boxSizing: "border-box",
               color: "#0f172a"
             }}
-            placeholder="Search area or landmark (e.g. Connaught Place)..."
+            placeholder="Search area or landmark (e.g. Indira Nagar Gorakhpur)..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             onKeyDown={(e) => {
@@ -254,9 +255,21 @@ function App() {
           </button>
         </div>
 
-        <span style={{ fontSize: "12px", whiteSpace: "nowrap" }}>
-          Buy / Sell / Rent on Map
-        </span>
+        <button
+          onClick={() => setShowInfo(true)}
+          style={{
+            padding: "6px 10px",
+            borderRadius: "999px",
+            border: "none",
+            background: "rgba(15,23,42,0.2)",
+            color: "white",
+            fontSize: "12px",
+            cursor: "pointer",
+            whiteSpace: "nowrap"
+          }}
+        >
+          About & Contact
+        </button>
       </header>
 
       {/* Side panel */}
@@ -300,7 +313,9 @@ function App() {
             marginBottom: "10px"
           }}
         >
-          <h4 style={{ margin: "0 0 8px", fontSize: "14px" }}>Add property (manual)</h4>
+          <h4 style={{ margin: "0 0 8px", fontSize: "14px" }}>
+            Add property (manual)
+          </h4>
           <input
             style={inputStyle}
             placeholder="Title"
@@ -351,7 +366,7 @@ function App() {
               background: "linear-gradient(to right,#22c55e,#16a34a)",
               color: "white",
               fontWeight: 600,
-              cursor: "pointer"
+              cursor: "pointer",
             }}
             onClick={() => {
               if (!newProp.title || !newProp.lat || !newProp.lng) return;
@@ -388,7 +403,9 @@ function App() {
             border: "1px solid rgba(148,163,184,0.5)"
           }}
         >
-          <h4 style={{ margin: "0 0 8px", fontSize: "14px" }}>Search properties</h4>
+          <h4 style={{ margin: "0 0 8px", fontSize: "14px" }}>
+            Search properties
+          </h4>
 
           <label style={{ fontSize: "12px" }}>Type</label>
           <select
@@ -421,7 +438,7 @@ function App() {
         <FlyToCenter center={center} />
         <ClickHandler />
 
-        {/* Highlighted search area or landmark */}
+        {/* Highlighted search area / landmark */}
         {searchResult && searchResult.type === "polygon" && (
           <Polygon
             positions={searchResult.polygonCoords}
@@ -438,7 +455,9 @@ function App() {
           <Marker position={[searchResult.lat, searchResult.lng]}>
             <Popup>
               <div style={{ minWidth: "180px" }}>
-                <h3 style={{ margin: "0 0 4px", fontSize: "15px" }}>Search result</h3>
+                <h3 style={{ margin: "0 0 4px", fontSize: "15px" }}>
+                  Search result
+                </h3>
                 <p style={{ margin: 0, fontSize: "12px" }}>{searchResult.name}</p>
               </div>
             </Popup>
@@ -464,7 +483,9 @@ function App() {
             <Marker key={p.id} position={[p.lat, p.lng]}>
               <Popup>
                 <div style={{ minWidth: "180px" }}>
-                  <h3 style={{ margin: "0 0 4px", fontSize: "16px" }}>{p.title}</h3>
+                  <h3 style={{ margin: "0 0 4px", fontSize: "16px" }}>
+                    {p.title}
+                  </h3>
                   <p style={{ margin: "0 0 2px" }}>
                     <b>Area:</b> {p.area}
                   </p>
@@ -505,7 +526,8 @@ function App() {
               <div style={{ minWidth: "200px" }}>
                 <h4 style={{ margin: "0 0 4px" }}>New listing here?</h4>
                 <p style={{ margin: "0 0 4px", fontSize: "12px" }}>
-                  Lat: {clickLocation.lat.toFixed(5)}, Lng: {clickLocation.lng.toFixed(5)}
+                  Lat: {clickLocation.lat.toFixed(5)}, Lng:{" "}
+                  {clickLocation.lng.toFixed(5)}
                 </p>
                 <input
                   style={{ width: "100%", marginBottom: "4px" }}
@@ -578,6 +600,72 @@ function App() {
           </Marker>
         )}
       </MapContainer>
+
+      {/* About & Contact overlay */}
+      {showInfo && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(15,23,42,0.55)",
+            zIndex: 2000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <div
+            style={{
+              width: "90%",
+              maxWidth: "480px",
+              background: "white",
+              borderRadius: "16px",
+              padding: "20px 22px",
+              boxShadow: "0 20px 50px rgba(15,23,42,0.35)"
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "10px"
+              }}
+            >
+              <h2 style={{ margin: 0, fontSize: "20px" }}>About GeoEstate</h2>
+              <button
+                onClick={() => setShowInfo(false)}
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  fontSize: "18px",
+                  cursor: "pointer"
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <p style={{ fontSize: "14px", marginBottom: "8px" }}>
+              GeoEstate helps people find land, houses and rooms to buy, sell
+              or rent using an interactive map.
+            </p>
+            <p style={{ fontSize: "14px", marginBottom: "12px" }}>
+              Zoom the map, click anywhere to add a new listing, or search for
+              a specific area using the top search bar.
+            </p>
+
+            <h3 style={{ fontSize: "16px", margin: "10px 0 6px" }}>Contact</h3>
+            <p style={{ fontSize: "14px", margin: 0 }}>
+              Owner: Raghuveer Singh
+              <br />
+              Email: raghuofficial3339@gmail.com
+              <br />
+              Phone / WhatsApp: +91-8887674866
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
