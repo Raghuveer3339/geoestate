@@ -207,7 +207,7 @@ function App() {
         }}
       >
         <span style={{ fontWeight: "bold", whiteSpace: "nowrap" }}>
-          GeoEstate
+          JioEstate
         </span>
 
         <div
@@ -632,7 +632,7 @@ function App() {
                 marginBottom: "10px"
               }}
             >
-              <h2 style={{ margin: 0, fontSize: "20px" }}>About GeoEstate</h2>
+              <h2 style={{ margin: 0, fontSize: "20px" }}>About JioEstate</h2>
               <button
                 onClick={() => setShowInfo(false)}
                 style={{
@@ -647,7 +647,7 @@ function App() {
             </div>
 
             <p style={{ fontSize: "14px", marginBottom: "8px" }}>
-              GeoEstate helps people find land, houses and rooms to buy, sell
+              JioEstate helps people find land, houses and rooms to buy, sell
               or rent using an interactive map.
             </p>
             <p style={{ fontSize: "14px", marginBottom: "12px" }}>
