@@ -284,27 +284,26 @@ function App() {
 
       {/* Side panel */}
       <div
-                  style={{
-                    position: "absolute",
-                    zIndex: 1000,
-                    background: "rgba(15,23,42,0.9)",
-                    padding: "12px",
-                    borderRadius: isMobile ? "16px 16px 0 0" : "12px",
-                    boxShadow: "0 14px 35px rgba(15,23,42,0.45)",
-                    width: isMobile ? "100%" : "260px",
-                    maxHeight: isMobile ? "35vh" : "70vh",
-                    overflowY: "auto",
-                    border: "1px solid rgba(148,163,184,0.6)",
-                    backdropFilter: "blur(10px)",
-                    color: "white",
-                    left: isMobile ? 0 : undefined,
-                    right: isMobile ? 0 : 16,
-                    top: isMobile ? undefined : 72,
-                    bottom: isMobile ? 0 : undefined
-                  }}
-                
-        
-      >
+  style={{
+    position: "absolute",
+    zIndex: 1000,
+    background: "rgba(15,23,42,0.9)",
+    padding: "12px",
+    borderRadius: isMobile ? "16px 16px 0 0" : "12px",
+    boxShadow: "0 14px 35px rgba(15,23,42,0.45)",
+    width: isMobile ? "100%" : "260px",
+    maxHeight: isMobile ? "35vh" : "70vh",
+    overflowY: "auto",
+    border: "1px solid rgba(148,163,184,0.6)",
+    backdropFilter: "blur(10px)",
+    color: "white",
+    left: isMobile ? 0 : undefined,
+    right: isMobile ? 0 : 16,
+    top: isMobile ? undefined : 72,
+    bottom: isMobile ? 0 : undefined
+  }}
+>
+
                 {isMobile && (
           <div
             style={{
