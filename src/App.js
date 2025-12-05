@@ -91,10 +91,10 @@ function App() {
   const inputStyle = {
     width: "100%",
     marginBottom: "6px",
-    padding: "6px 8px",
+    padding: "6px 10px",
     borderRadius: "8px",
     border: "1px solid rgba(148,163,184,0.7)",
-    fontSize: "13px",
+    fontSize: "14px",
     boxSizing: "border-box",
     background: "rgba(15,23,42,0.6)",
     color: "white"
@@ -292,7 +292,7 @@ function App() {
                   borderRadius: isMobile ? "16px 16px 0 0" : "16px",
                   boxShadow: "0 18px 45px rgba(15,23,42,0.55)",
                   width: isMobile ? "100%" : "300px",
-                  maxHeight: isMobile ? "45vh" : "80vh",
+                  maxHeight: isMobile ? "35vh" : "80vh",
                   overflowY: "auto",
                   border: "1px solid rgba(148,163,184,0.6)",
                   backdropFilter: "blur(10px)",
