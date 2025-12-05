@@ -77,6 +77,8 @@ function App() {
   const [searchResult, setSearchResult] = React.useState(null); // {type:"polygon"/"point", ...}
 
   const [showInfo, setShowInfo] = React.useState(false);
+  const [isSatellite, setIsSatellite] = React.useState(false);
+
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
 
   React.useEffect(() => {
@@ -265,21 +267,40 @@ function App() {
           </button>
         </div>
 
-        <button
-          onClick={() => setShowInfo(true)}
-          style={{
-            padding: "6px 10px",
-            borderRadius: "999px",
-            border: "none",
-            background: "rgba(15,23,42,0.2)",
-            color: "white",
-            fontSize: "12px",
-            cursor: "pointer",
-            whiteSpace: "nowrap"
-          }}
-        >
-          About & Contact
-        </button>
+        <div style={{ display: "flex", gap: "8px" }}>
+  <button
+    onClick={() => setIsSatellite(!isSatellite)}
+    style={{
+      padding: "6px 10px",
+      borderRadius: "999px",
+      border: "none",
+      background: "rgba(15,23,42,0.2)",
+      color: "white",
+      fontSize: "12px",
+      cursor: "pointer",
+      whiteSpace: "nowrap"
+    }}
+  >
+    {isSatellite ? "Street View" : "Satellite"}
+  </button>
+
+  <button
+    onClick={() => setShowInfo(true)}
+    style={{
+      padding: "6px 10px",
+      borderRadius: "999px",
+      border: "none",
+      background: "rgba(15,23,42,0.2)",
+      color: "white",
+      fontSize: "12px",
+      cursor: "pointer",
+      whiteSpace: "nowrap"
+    }}
+  >
+    About & Contact
+  </button>
+</div>
+
       </header>
 
       {/* Side panel */}
@@ -287,22 +308,21 @@ function App() {
   style={{
     position: "absolute",
     zIndex: 1000,
-    background: "rgba(15,23,42,0.9)",
+    background: "rgba(15,23,42,0.95)",
     padding: "12px",
-    borderRadius: isMobile ? "16px 16px 0 0" : "12px",
-    boxShadow: "0 14px 35px rgba(15,23,42,0.45)",
-    width: isMobile ? "100%" : "260px",
-    maxHeight: isMobile ? "28vh" : "70vh",
+    borderRadius: "14px",
+    boxShadow: "0 16px 40px rgba(15,23,42,0.55)",
+    width: "260px",
+    maxHeight: "75vh",
     overflowY: "auto",
     border: "1px solid rgba(148,163,184,0.6)",
     backdropFilter: "blur(10px)",
     color: "white",
-    left: isMobile ? 0 : undefined,
-    right: isMobile ? 0 : 16,
-    top: isMobile ? undefined : 72,
-    bottom: isMobile ? 0 : undefined
+    right: 16,
+    top: 76
   }}
 >
+
 
                 {isMobile && (
           <div
@@ -455,13 +475,22 @@ function App() {
 
       {/* Map */}
       <MapContainer center={center} zoom={11} style={{ width: "100%", height: "100%" }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="© OpenStreetMap contributors"
-        />
+  {isSatellite ? (
+    <TileLayer
+      url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+      attribution="Tiles © Esri"
+    />
+  ) : (
+    <TileLayer
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      attribution="© OpenStreetMap contributors"
+    />
+  )}
 
-        <FlyToCenter center={center} />
-        <ClickHandler />
+  <FlyToCenter center={center} />
+  <ClickHandler />
+  {/* rest of your map content stays the same */}
+
 
         {/* Highlighted search area / landmark */}
         {searchResult && searchResult.type === "polygon" && (
