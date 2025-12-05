@@ -77,6 +77,16 @@ function App() {
   const [searchResult, setSearchResult] = React.useState(null); // {type:"polygon"/"point", ...}
 
   const [showInfo, setShowInfo] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+
+  React.useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   const inputStyle = {
     width: "100%",
@@ -274,23 +284,37 @@ function App() {
 
       {/* Side panel */}
       <div
-        style={{
-          position: "absolute",
-          top: 70,
-          left: 24,
-          zIndex: 1000,
-          background: "rgba(15,23,42,0.9)",
-          padding: "16px",
-          borderRadius: "16px",
-          boxShadow: "0 18px 45px rgba(15,23,42,0.55)",
-          width: "300px",
-          maxHeight: "80vh",
-          overflowY: "auto",
-          border: "1px solid rgba(148,163,184,0.6)",
-          backdropFilter: "blur(10px)",
-          color: "white"
-        }}
+                style={{
+                  position: "absolute",
+                  zIndex: 1000,
+                  background: "rgba(15,23,42,0.9)",
+                  padding: "16px",
+                  borderRadius: isMobile ? "16px 16px 0 0" : "16px",
+                  boxShadow: "0 18px 45px rgba(15,23,42,0.55)",
+                  width: isMobile ? "100%" : "300px",
+                  maxHeight: isMobile ? "45vh" : "80vh",
+                  overflowY: "auto",
+                  border: "1px solid rgba(148,163,184,0.6)",
+                  backdropFilter: "blur(10px)",
+                  color: "white",
+                  left: isMobile ? 0 : 24,
+                  top: isMobile ? undefined : 70,
+                  bottom: isMobile ? 0 : undefined
+                }}
+        
       >
+                {isMobile && (
+          <div
+            style={{
+              width: "40px",
+              height: "4px",
+              borderRadius: "999px",
+              background: "rgba(148,163,184,0.9)",
+              margin: "0 auto 10px"
+            }}
+          />
+        )}
+
         <p
           style={{
             fontSize: "11px",
