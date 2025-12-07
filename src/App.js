@@ -601,7 +601,7 @@ function App() {
                       {p.type.toUpperCase()}
                     </span>
                   </p>
-                  <p style={{ margin: 0, fontSize: "12px", color: "#6b7280" }}>
+                  <p style={{ margin: 0, fontSize: "11px", color: "#6b7280" }}>
                     Lat: {p.lat.toFixed(5)}, Lng: {p.lng.toFixed(5)}
                   </p>
                 </div>
