@@ -54,7 +54,7 @@ function App() {
   const [center, setCenter] = React.useState([28.6139, 77.209]); // Delhi
 
   const [filters, setFilters] = React.useState({ type: "all", text: "" });
-  const [list, setList] = React.useState([]);
+  
 
 
   const [newProp, setNewProp] = React.useState({
