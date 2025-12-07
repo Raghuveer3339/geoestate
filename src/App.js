@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   MapContainer,
@@ -12,35 +12,6 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-const initialProperties = [
-  {
-    id: 1,
-    lat: 28.6139,
-    lng: 77.209,
-    title: "Room near college",
-    price: "₹6,000/mo",
-    area: "1 Room",
-    type: "rent"
-  },
-  {
-    id: 2,
-    lat: 28.7041,
-    lng: 77.1025,
-    title: "3 BHK Family Flat",
-    price: "₹20,000/mo",
-    area: "1350 sqft",
-    type: "rent"
-  },
-  {
-    id: 3,
-    lat: 28.5355,
-    lng: 77.391,
-    title: "Residential Plot 200 sqyd",
-    price: "₹45 Lakh",
-    area: "200 sqyd",
-    type: "sale"
-  }
-];
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -51,13 +22,11 @@ L.Icon.Default.mergeOptions({
 });
 
 function App() {
-  const [center, setCenter] = React.useState([28.6139, 77.209]); // Delhi
+  const [list, setList] = useState([]);
+  const [center, setCenter] = useState([28.6139, 77.209]);
+  const [filters, setFilters] = useState({ type: "all", text: "" });
 
-  const [filters, setFilters] = React.useState({ type: "all", text: "" });
-  
-
-
-  const [newProp, setNewProp] = React.useState({
+  const [newProp, setNewProp] = useState({
     title: "",
     price: "",
     area: "",
@@ -66,32 +35,23 @@ function App() {
     lng: ""
   });
 
-  const [clickLocation, setClickLocation] = React.useState(null);
-  const [clickForm, setClickForm] = React.useState({
+  const [clickLocation, setClickLocation] = useState(null);
+  const [clickForm, setClickForm] = useState({
     title: "",
     price: "",
     area: "",
     type: "rent"
   });
 
-  const [searchText, setSearchText] = React.useState("");
-  const [searchResult, setSearchResult] = React.useState(null); // {type:"polygon"/"point", ...}
+  const [searchText, setSearchText] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
 
-  const [showInfo, setShowInfo] = React.useState(false);
-  const [isSatellite, setIsSatellite] = React.useState(false);
+  const [showInfo, setShowInfo] = useState(false);
+  const [isSatellite, setIsSatellite] = useState(false);
+  const [isMobile] = useState(window.innerWidth < 768);
 
-  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
-  React.useEffect(() => {
-    async function fetchProperties() {
-      try {
-        const res = await axios.get("http://localhost:5000/api/properties");
-        setList(res.data);
-      } catch (err) {
-        console.error("Failed to load properties", err);
-      }
-    }
-    fetchProperties();
-  }, []);
+
+  
   
 
   React.useEffect(() => {
