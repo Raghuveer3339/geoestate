@@ -177,7 +177,8 @@ function App() {
   }
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div style={{ width: "100vw", height: "100vh", background: "#020617" }}>
+
       {/* Header with search bar */}
       <header
         style={{
@@ -577,7 +578,17 @@ function App() {
                 setClickLocation(null);
               }}
             >
-              <div style={{ minWidth: "200px" }}>
+<div
+  style={{
+    minWidth: "220px",
+    background: "rgba(15,23,42,0.96)",
+    borderRadius: "12px",
+    padding: "10px 12px",
+    color: "white",
+    border: "1px solid rgba(148,163,184,0.6)",
+    boxShadow: "0 16px 40px rgba(15,23,42,0.6)"
+  }}
+>
                 <h4 style={{ margin: "0 0 4px" }}>New listing here?</h4>
                 <p style={{ margin: "0 0 4px", fontSize: "12px" }}>
                   Lat: {clickLocation.lat.toFixed(5)}, Lng:{" "}
