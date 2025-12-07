@@ -617,7 +617,19 @@ function App() {
                   <option value="rent">Rent</option>
                   <option value="sale">Sale</option>
                 </select>
-                onClick={async () => {
+                <button
+  style={{
+    width: "100%",
+    padding: "6px",
+    borderRadius: "6px",
+    border: "none",
+    background: "#2563eb",
+    color: "white",
+    fontSize: "13px",
+    fontWeight: 600,
+    cursor: "pointer"
+  }}
+  onClick={async () => {
     if (!clickForm.title) return;
     try {
       const res = await axios.post("http://localhost:5000/api/properties", {
@@ -640,6 +652,11 @@ function App() {
       console.error("Failed to save property from click", err);
     }
   }}
+>
+  Add marker here
+</button>
+
+
 
               </div>
             </Popup>
