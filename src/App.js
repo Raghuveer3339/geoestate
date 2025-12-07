@@ -617,38 +617,30 @@ function App() {
                   <option value="rent">Rent</option>
                   <option value="sale">Sale</option>
                 </select>
-                <button
-                  style={{
-                    width: "100%",
-                    padding: "6px",
-                    borderRadius: "6px",
-                    border: "none",
-                    background: "#2563eb",
-                    color: "white",
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    cursor: "pointer"
-                  }}
-                  onClick={() => {
-                    if (!clickForm.title) return;
-                    const id = list.length + 1;
-                    setList([
-                      ...list,
-                      {
-                        id,
-                        title: clickForm.title,
-                        price: clickForm.price,
-                        area: clickForm.area,
-                        type: clickForm.type,
-                        lat: clickLocation.lat,
-                        lng: clickLocation.lng
-                      }
-                    ]);
-                    setClickLocation(null);
-                  }}
-                >
-                  Add marker here
-                </button>
+                onClick={async () => {
+    if (!clickForm.title) return;
+    try {
+      const res = await axios.post("http://localhost:5000/api/properties", {
+        title: clickForm.title,
+        price: clickForm.price,
+        area: clickForm.area,
+        type: clickForm.type,
+        lat: clickLocation.lat,
+        lng: clickLocation.lng
+      });
+      setList((prev) => [res.data, ...prev]);
+      setClickLocation(null);
+      setClickForm({
+        title: "",
+        price: "",
+        area: "",
+        type: "rent"
+      });
+    } catch (err) {
+      console.error("Failed to save property from click", err);
+    }
+  }}
+
               </div>
             </Popup>
           </Marker>
