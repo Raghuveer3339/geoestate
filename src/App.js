@@ -54,7 +54,8 @@ function App() {
   const [center, setCenter] = React.useState([28.6139, 77.209]); // Delhi
 
   const [filters, setFilters] = React.useState({ type: "all", text: "" });
-  const [list, setList] = React.useState(initialProperties);
+  const [list, setList] = React.useState([]);
+
 
   const [newProp, setNewProp] = React.useState({
     title: "",
@@ -80,14 +81,31 @@ function App() {
   const [isSatellite, setIsSatellite] = React.useState(false);
 
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => {
+    async function fetchProperties() {
+      try {
+        const res = await axios.get("http://localhost:5000/api/properties");
+        setList(res.data);
+      } catch (err) {
+        console.error("Failed to load properties", err);
+      }
+    }
+    fetchProperties();
+  }, []);
+  
 
   React.useEffect(() => {
-    function handleResize() {
-      setIsMobile(window.innerWidth < 768);
+    async function fetchProperties() {
+      try {
+        const res = await axios.get("http://localhost:5000/api/properties");
+        setList(res.data);
+      } catch (err) {
+        console.error("Failed to load properties", err);
+      }
     }
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    fetchProperties();
   }, []);
+  
 
 
   const inputStyle = {
@@ -219,7 +237,7 @@ function App() {
         }}
       >
         <span style={{ fontWeight: "bold", whiteSpace: "nowrap" }}>
-          JioEstate
+          DevEstate
         </span>
 
         <div
@@ -250,18 +268,28 @@ function App() {
             }}
           />
           <button
-            onClick={handleSearch}
-            style={{
-              padding: "7px 14px",
-              borderRadius: "999px",
-              border: "none",
-              background: "#1d4ed8",
-              color: "white",
-              fontSize: "13px",
-              fontWeight: 600,
-              cursor: "pointer",
-              whiteSpace: "nowrap"
+            onClick={async () => {
+              if (!newProp.title || !newProp.lat || !newProp.lng) return;
+              try {
+                const res = await axios.post("http://localhost:5000/api/properties", {
+                  ...newProp,
+                  lat: parseFloat(newProp.lat),
+                  lng: parseFloat(newProp.lng)
+                });
+                setList((prev) => [res.data, ...prev]);
+                setNewProp({
+                  title: "",
+                  price: "",
+                  area: "",
+                  type: "rent",
+                  lat: "",
+                  lng: ""
+                });
+              } catch (err) {
+                console.error("Failed to save property", err);
+              }
             }}
+            
           >
             Search
           </button>
@@ -413,27 +441,31 @@ function App() {
               fontWeight: 600,
               cursor: "pointer",
             }}
-            onClick={() => {
+            onClick={async () => {
               if (!newProp.title || !newProp.lat || !newProp.lng) return;
-              const id = list.length + 1;
-              setList([
-                ...list,
-                {
-                  id,
-                  ...newProp,
+              try {
+                const res = await axios.post("http://localhost:5000/api/properties", {
+                  title: newProp.title,
+                  price: newProp.price,
+                  area: newProp.area,
+                  type: newProp.type,
                   lat: parseFloat(newProp.lat),
                   lng: parseFloat(newProp.lng)
-                }
-              ]);
-              setNewProp({
-                title: "",
-                price: "",
-                area: "",
-                type: "rent",
-                lat: "",
-                lng: ""
-              });
+                });
+                setList((prev) => [res.data, ...prev]);
+                setNewProp({
+                  title: "",
+                  price: "",
+                  area: "",
+                  type: "rent",
+                  lat: "",
+                  lng: ""
+                });
+              } catch (err) {
+                console.error("Failed to save property", err);
+              }
             }}
+          
           >
             Add listing
           </button>
@@ -475,17 +507,25 @@ function App() {
 
       {/* Map */}
       <MapContainer center={center} zoom={11} style={{ width: "100%", height: "100%" }}>
-  {isSatellite ? (
+      {isSatellite ? (
+  <>
     <TileLayer
       url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       attribution="Tiles © Esri"
     />
-  ) : (
     <TileLayer
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      opacity={0.4}
       attribution="© OpenStreetMap contributors"
     />
-  )}
+  </>
+) : (
+  <TileLayer
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    attribution="© OpenStreetMap contributors"
+  />
+)}
+
 
   <FlyToCenter center={center} />
   <ClickHandler />
